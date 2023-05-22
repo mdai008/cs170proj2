@@ -14,7 +14,7 @@ def defaultScore(data):
 def featureSearchForward(dataArray):
     features = dataArray[1:]
     featuresLen = len(features)
-    currFeatures = []
+    usedFeatures = []
     bestFeatures = []
     bestScore = defaultScore(features)
 
@@ -23,17 +23,20 @@ def featureSearchForward(dataArray):
         featureToBeAdded = 0
         bestSoFar = 0 
         for j in range(featuresLen):
-            if features[j] not in currFeatures:    
-                accuracy = evalFunc(features,currFeatures,features[j])
+            if features[j] not in usedFeatures:    
+                accuracy = evalFunc(features,usedFeatures,features[j])
                 print("--Considering adding feature " + str(features[j]) + ". Accuracy = " + str(accuracy))
                 if accuracy > bestSoFar:
                     bestSoFar = accuracy
                     featureToBeAdded = features[j]
-        currFeatures.append(featureToBeAdded)
+        usedFeatures.append(featureToBeAdded)
         print("Level " + str(i + 1) + ": added feature " + str(featureToBeAdded))
         if bestSoFar > bestScore:
             bestScore = bestSoFar
-            bestFeatures = currFeatures
+            bestFeatures = []
+            for i in range(featuresLen):
+                if features[i] in usedFeatures:
+                    bestFeatures.append(features[i])
     return [bestFeatures,bestScore]
 
 def featureSearchBackward(dataArray):
@@ -58,6 +61,7 @@ def featureSearchBackward(dataArray):
         print("Level " + str(i + 1) + ": removed feature " + str(featureToBeRemoved))
         if bestSoFar > bestScore:
             bestScore = bestSoFar
+            bestFeatures = []
             for i in range(featuresLen):
                 if features[i] not in removedFeatureIndex:
                     bestFeatures.append(features[i])
