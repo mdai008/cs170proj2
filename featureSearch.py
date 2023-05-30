@@ -1,4 +1,5 @@
 import random
+from classifier import *
 
 def evalFunc(data,currFeatures,featureToBeAdded):
     score = random.randint(0, 100)

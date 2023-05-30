@@ -1,21 +1,24 @@
 from featureSearch import *
 
-data = [0,1,2,3,4]
+data = pd.read_csv('small-test-dataset.txt', sep=' ', header = None, engine = 'python', skipinitialspace = True)
+currFeatures = [3,5]
+featureToBeAdded = [7]
+startTime = time.time()
+accuracy = leaveOneOutCrossValidation(data,currFeatures,featureToBeAdded)
+endTime = time.time()
+totalTime = (endTime - startTime) * 10**3
+print("Accuracy: " + str(accuracy)) #0.89
+print("Total time: " + str(totalTime) + " ms") #149 ms
+
+data = pd.read_csv('large-test-dataset-1.txt', sep=' ', header = None, engine = 'python', skipinitialspace = True)
+currFeatures = [1,15]
+featureToBeAdded = [27]
+startTime = time.time()
+accuracy = leaveOneOutCrossValidation(data,currFeatures,featureToBeAdded)
+endTime = time.time()
+totalTime = (endTime - startTime) * 10**3
+print("Accuracy: " + str(accuracy)) #0.949
+print("Total time: " + str(totalTime) + " ms") #4667 ms
 
 
-print("--Testing forward selection--")
-bestFeatures = featureSearchForward(data)
-print("--Forward selection results--")
-print("Best features: ")
-print(bestFeatures[0])
-print("Best score: ")
-print(bestFeatures[1])
-
-print("--Testing backward elimination--")
-bestFeatures = featureSearchBackward(data)
-print("--Backward elimination results--")
-print("Best features: ")
-print(bestFeatures[0])
-print("Best score: ")
-print(bestFeatures[1])
 
