@@ -9,7 +9,7 @@ def leaveOneOutCrossValidation(data,currFeatures,featureToBeAdded):
     # index data using a tree 
     correctClassifications = 0
     numRows = len(data) #100
-    labels = data.iloc[:,0].values #100 x 1
+    labels = data.iloc[:,0].values #100 x 1 numpy array
     features = data.iloc[:,currFeatures+featureToBeAdded].values #100 x 10
     # for i in range(numRows):
     #     features[i] = list(map(float, features[i]))
@@ -21,7 +21,7 @@ def leaveOneOutCrossValidation(data,currFeatures,featureToBeAdded):
         nearestNeighborDist = math.inf
         nearestNeighborIndex = 111
         nearestNeighborLabel = 111
-        print("Object " + str(i+1) + " is of class " + str(int(objToClassifyLabel)))
+        # print("Object " + str(i+1) + " is of class " + str(int(objToClassifyLabel)))
         # https://www.geeksforgeeks.org/how-to-check-the-execution-time-of-python-script/
         startTime = time.time()
         for j in range(numRows):
@@ -33,8 +33,8 @@ def leaveOneOutCrossValidation(data,currFeatures,featureToBeAdded):
                     nearestNeighborLabel = labels[j]
         endTime = time.time()
         totalTime = (endTime - startTime) * 10**3
-        print("Its nearest neighbor is Object " + str(nearestNeighborIndex+1) + " of class " + str(int(nearestNeighborLabel)))
-        print("Time taken: " + str(totalTime) + " ms")
+        # print("Its nearest neighbor is Object " + str(nearestNeighborIndex+1) + " of class " + str(int(nearestNeighborLabel)))
+        # print("Time taken: " + str(totalTime) + " ms")
         if objToClassifyLabel == nearestNeighborLabel:
             correctClassifications = correctClassifications + 1
 

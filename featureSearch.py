@@ -1,43 +1,86 @@
 import random
 from classifier import *
 
-def evalFunc(data,currFeatures,featureToBeAdded):
-    score = random.randint(0, 100)
+# def evalFunc(data,currFeatures,featureToBeAdded):
+#     score = random.randint(0, 100)
     
-    return score
+#     return score
 
 def defaultScore(data):
     # defaultScore = majority / total
-    score = 50
+    # https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.mode.html
+    # https://pandas.pydata.org/docs/reference/api/pandas.Series.value_counts.html
+    total = data.shape[0]
+    labels = data.iloc[:,0]
+    labelCounts = labels.value_counts() #pandas series
+    labelCounts = labelCounts.tolist() #convert to list
+    # print(total)
+    # print(type(labelCounts))
+    # print(labelCounts)
+    labelCounts = labelCounts[0]
+    # print(labelCounts)
     
+    score = labelCounts / total
+
     return score
 
-def featureSearchForward(dataArray):
-    features = dataArray[1:]
-    featuresLen = len(features)
+def featureSearchForward(data):
+    featureNumbers = data.shape[1] - 1
+    featureNumbers = range(featureNumbers)
+    featureNumbers = np.array(featureNumbers) + 1
+    featureNumbers = list(featureNumbers)
+    # print(featureNumbers)
+    # features = data[1:]
+    featuresLen = len(featureNumbers)
+    # print(featuresLen)
     usedFeatures = []
     bestFeatures = []
-    bestScore = defaultScore(features)
+    bestScore = defaultScore(data)
+    # print(bestScore)
 
     for i in range(featuresLen):
         print("Level " + str(i + 1) + " of the search tree.")
-        featureToBeAdded = 0
+        featureToBeAdded = -1
         bestSoFar = 0 
+        # currBestSoFar = 0
+        # isBestSoFarFound = False
         for j in range(featuresLen):
-            if features[j] not in usedFeatures:    
-                accuracy = evalFunc(features,usedFeatures,features[j])
-                print("--Considering adding feature " + str(features[j]) + ". Accuracy = " + str(accuracy))
+            if featureNumbers[j] not in usedFeatures:
+                # print(usedFeatures + featureNumbers[j])
+                # print(type(usedFeatures))
+                # print(type(featureNumbers[j]))
+                # print(usedFeatures)
+                # print(featureNumbers[j])
+                
+                # https://stackoverflow.com/questions/9452775/converting-numpy-dtypes-to-native-python-types
+                # dummy = featureNumbers[j]
+                # dummy = dummy.item()
+                # print(type(dummy))
+                
+                dummyList = []
+                dummyList.append(featureNumbers[j])
+                # print(dummyList)
+                
+                accuracy = leaveOneOutCrossValidation(data,usedFeatures,dummyList)
+                # accuracy = 1
+                print("--Considering adding feature " + str(featureNumbers[j]) + ". Accuracy = " + str(accuracy))
                 if accuracy > bestSoFar:
                     bestSoFar = accuracy
-                    featureToBeAdded = features[j]
-        usedFeatures.append(featureToBeAdded)
+                    # print(featureNumbers[j])
+                    featureToBeAdded = featureNumbers[j]
+                    # print(featureToBeAdded)
+        if featureToBeAdded == -1:
+            print("Index error")
+        else:
+            usedFeatures.append(featureToBeAdded)
+        # print(usedFeatures)
         print("Level " + str(i + 1) + ": added feature " + str(featureToBeAdded))
         if bestSoFar > bestScore:
             bestScore = bestSoFar
             bestFeatures = []
             for i in range(featuresLen):
-                if features[i] in usedFeatures:
-                    bestFeatures.append(features[i])
+                if featureNumbers[i] in usedFeatures:
+                    bestFeatures.append(featureNumbers[i])
     return [bestFeatures,bestScore]
 
 def featureSearchBackward(dataArray):
@@ -53,7 +96,7 @@ def featureSearchBackward(dataArray):
         bestSoFar = 0 
         for j in range(featuresLen):
             if features[j] not in removedFeatureIndex:    
-                accuracy = evalFunc(features,removedFeatureIndex,features[j])
+                accuracy = leaveOneOutCrossValidation(features,removedFeatureIndex,features[j])
                 print("--Considering removing feature " + str(features[j]) + ". Accuracy = " + str(accuracy))
                 if accuracy > bestSoFar:
                     bestSoFar = accuracy
@@ -67,3 +110,9 @@ def featureSearchBackward(dataArray):
                 if features[i] not in removedFeatureIndex:
                     bestFeatures.append(features[i])
     return [bestFeatures,bestScore]
+
+
+
+
+
+
