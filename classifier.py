@@ -23,7 +23,7 @@ def leaveOneOutCrossValidation(data,currFeatures,featureToBeAdded):
         nearestNeighborLabel = 111
         # print("Object " + str(i+1) + " is of class " + str(int(objToClassifyLabel)))
         # https://www.geeksforgeeks.org/how-to-check-the-execution-time-of-python-script/
-        startTime = time.time()
+        # startTime = time.time()
         for j in range(numRows):
             if i != j:
                 distance = math.sqrt(sum(pow((objToClassify - features[j]),2)))
@@ -31,8 +31,8 @@ def leaveOneOutCrossValidation(data,currFeatures,featureToBeAdded):
                     nearestNeighborDist = distance
                     nearestNeighborIndex = j
                     nearestNeighborLabel = labels[j]
-        endTime = time.time()
-        totalTime = (endTime - startTime) * 10**3
+        # endTime = time.time()
+        # totalTime = (endTime - startTime) * 10**3
         # print("Its nearest neighbor is Object " + str(nearestNeighborIndex+1) + " of class " + str(int(nearestNeighborLabel)))
         # print("Time taken: " + str(totalTime) + " ms")
         if objToClassifyLabel == nearestNeighborLabel:

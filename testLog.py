@@ -61,20 +61,32 @@ from featureSearch import *
 # print("Total time: " + str(totalTime) + " ms") #4667 ms
 
 
-# --- PART 3 ---
-data = pd.read_csv('CS170_Spring_2023_Small_data__35.txt', sep=' ', header = None, engine = 'python', skipinitialspace = True)
-# currFeatures = [3,5]
-# featureToBeAdded = [7]
-# startTime = time.time()
-# accuracy = leaveOneOutCrossValidation(data,currFeatures,featureToBeAdded)
-# endTime = time.time()
-# totalTime = (endTime - startTime) * 10**3
-# print("Accuracy: " + str(accuracy)) #0.89
-# print("Total time: " + str(totalTime) + " ms") #149 ms
+# # --- PART 3 ---
+# data = pd.read_csv('CS170_Spring_2023_Small_data__35.txt', sep=' ', header = None, engine = 'python', skipinitialspace = True)
+# # currFeatures = [3,5]
+# # featureToBeAdded = [7]
+# # startTime = time.time()
+# # accuracy = leaveOneOutCrossValidation(data,currFeatures,featureToBeAdded)
+# # endTime = time.time()
+# # totalTime = (endTime - startTime) * 10**3
+# # print("Accuracy: " + str(accuracy)) #0.89
+# # print("Total time: " + str(totalTime) + " ms") #149 ms
 
-# print(data.shape[1])
+# # print(data.shape[1])
+# bestFeatures = featureSearchForward(data)
+# print(bestFeatures)
+
+
+data = pd.read_csv('CS170_Spring_2023_Small_data__35.txt', sep=' ', header = None, engine = 'python', skipinitialspace = True)
+
 bestFeatures = featureSearchForward(data)
-print(bestFeatures)
+print(bestFeatures) #[ [3,5,9,10] , 0.99 ], keep these features to get 99% accuracy
+
+bestFeatures = featureSearchBackward(data)
+print(bestFeatures) #[ [1,2,4,6,7,8] , 0.99 ], remove these features to get 99% accuracy
+
+
+
 
 
 

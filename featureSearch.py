@@ -83,32 +83,48 @@ def featureSearchForward(data):
                     bestFeatures.append(featureNumbers[i])
     return [bestFeatures,bestScore]
 
-def featureSearchBackward(dataArray):
-    features = dataArray[1:]
-    featuresLen = len(features)
+def featureSearchBackward(data):
+    featureNumbers = data.shape[1] - 1
+    featureNumbers = range(featureNumbers)
+    featureNumbers = np.array(featureNumbers) + 1
+    featureNumbers = list(featureNumbers)
+    featuresLen = len(featureNumbers)
+    
     removedFeatureIndex = []
     bestFeatures = []
-    bestScore = defaultScore(features)
+    bestScore = defaultScore(data)
 
     for i in range(featuresLen):
         print("Level " + str(i + 1) + " of the search tree.")
-        featureToBeRemoved = 0
+        featureToBeRemoved = -1
         bestSoFar = 0 
+        
         for j in range(featuresLen):
-            if features[j] not in removedFeatureIndex:    
-                accuracy = leaveOneOutCrossValidation(features,removedFeatureIndex,features[j])
-                print("--Considering removing feature " + str(features[j]) + ". Accuracy = " + str(accuracy))
+            if featureNumbers[j] not in removedFeatureIndex:
+                dummyList = []
+                dummyList.append(featureNumbers[j])
+                accuracy = leaveOneOutCrossValidation(data,removedFeatureIndex,dummyList)
+                print("--Considering removing feature " + str(featureNumbers[j]) + ". Accuracy = " + str(accuracy))
                 if accuracy > bestSoFar:
                     bestSoFar = accuracy
-                    featureToBeRemoved = features[j]
-        removedFeatureIndex.append(featureToBeRemoved)
+                    featureToBeRemoved = featureNumbers[j]
+        
+        if featureToBeRemoved == -1:
+            print("Index error")
+        else:            
+            removedFeatureIndex.append(featureToBeRemoved)
+        
         print("Level " + str(i + 1) + ": removed feature " + str(featureToBeRemoved))
         if bestSoFar > bestScore:
             bestScore = bestSoFar
             bestFeatures = []
             for i in range(featuresLen):
-                if features[i] not in removedFeatureIndex:
-                    bestFeatures.append(features[i])
+                # if featureNumbers[i] not in removedFeatureIndex:
+                if featureNumbers[i] in removedFeatureIndex:
+                    bestFeatures.append(featureNumbers[i])
+    
+    
+    
     return [bestFeatures,bestScore]
 
 
